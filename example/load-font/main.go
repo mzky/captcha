@@ -3,13 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/mzky/captcha"
+	"golang.org/x/image/font/gofont/goregular"
 	"html/template"
 	"io"
 	"net/http"
-	"os"
-
-	"github.com/mzky/captcha"
-	"golang.org/x/image/font/gofont/goregular"
 )
 
 func writeToBuffer(w io.Writer) []byte {
@@ -18,7 +16,6 @@ func writeToBuffer(w io.Writer) []byte {
 	return buf.Bytes()
 }
 func main() {
-	os.Exit(0)
 	err := captcha.LoadFont(goregular.TTF)
 	if err != nil {
 		panic(err)
