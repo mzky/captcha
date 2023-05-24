@@ -82,26 +82,25 @@ type SetOption func(*Options)
 type Data struct {
 	// Text is captcha solution.
 	Text string
-
-	img *image.NRGBA
+	Img  *image.NRGBA
 }
 
 // WriteImage encodes image data and writes to an io.Writer.
 // It returns possible error from PNG encoding.
 func (data *Data) WriteImage(w io.Writer) error {
-	return png.Encode(w, data.img)
+	return png.Encode(w, data.Img)
 }
 
 // WriteJPG encodes image data in JPEG format and writes to an io.Writer.
 // It returns possible error from JPEG encoding.
 func (data *Data) WriteJPG(w io.Writer, o *jpeg.Options) error {
-	return jpeg.Encode(w, data.img, o)
+	return jpeg.Encode(w, data.Img, o)
 }
 
 // WriteGIF encodes image data in GIF format and writes to an io.Writer.
 // It returns possible error from GIF encoding.
 func (data *Data) WriteGIF(w io.Writer, o *gif.Options) error {
-	return gif.Encode(w, data.img, o)
+	return gif.Encode(w, data.Img, o)
 }
 
 func init() {
@@ -140,7 +139,7 @@ func New(width int, height int, option ...SetOption) (*Data, error) {
 		return nil, err
 	}
 
-	return &Data{Text: text, img: img}, nil
+	return &Data{Text: text, Img: img}, nil
 }
 
 // NewMathExpr creates a new captcha.
@@ -157,7 +156,7 @@ func NewMathExpr(width int, height int, option ...SetOption) (*Data, error) {
 		return nil, err
 	}
 
-	return &Data{Text: text, img: img}, nil
+	return &Data{Text: text, Img: img}, nil
 }
 
 // NewCustomGenerator creates a new captcha based on a custom text generator.
@@ -175,7 +174,7 @@ func NewCustomGenerator(
 		return nil, err
 	}
 
-	return &Data{Text: answer, img: img}, nil
+	return &Data{Text: answer, Img: img}, nil
 }
 
 func drawWithOption(text string, img *image.NRGBA, options *Options) error {
