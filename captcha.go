@@ -12,6 +12,7 @@ import (
 	"io"
 	"math"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
@@ -101,6 +102,39 @@ func (data *Data) WriteJPG(w io.Writer, o *jpeg.Options) error {
 // It returns possible error from GIF encoding.
 func (data *Data) WriteGIF(w io.Writer, o *gif.Options) error {
 	return gif.Encode(w, data.Img, o)
+}
+
+// 将图像保存为PNG文件
+func (data *Data) WritePNGFile(fp string) error {
+	f, err := os.Create(fp)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	return png.Encode(f, data.Img)
+}
+
+// 将图像保存为JPG文件
+func (data *Data) WriteJPGFile(fp string) error {
+	f, err := os.Create(fp)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	return jpeg.Encode(f, data.Img, &jpeg.Options{Quality: 75})
+}
+
+// 将图像保存为GIF文件
+func (data *Data) WriteGIFFile(fp string) error {
+	f, err := os.Create(fp)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	return gif.Encode(f, data.Img, &gif.Options{})
 }
 
 func init() {
@@ -220,7 +254,7 @@ func drawCurves(img *image.NRGBA, opts *Options) {
 // For now sine curves will do the job
 func drawSineCurve(img *image.NRGBA, opts *Options) {
 	var xStart, xEnd int
-	if opts.width <= 40 {
+	if opts.width <= 30 {
 		xStart, xEnd = 1, opts.width-1
 	} else {
 		xStart = rand.Intn(opts.width/10) + 1
@@ -249,16 +283,16 @@ func drawText(text string, img *image.NRGBA, opts *Options) error {
 	ctx.SetHinting(font.HintingFull)
 	ctx.SetFont(ttfFont)
 
-	fontSpacing := opts.width / len(text)
+	fontSpacing := opts.width/len(text) - 2
 	fontOffset := rand.Intn(fontSpacing / 2)
 
 	for idx, char := range text {
-		fontScale := 0.8 + rand.Float64()*0.4
+		fontScale := 0.8 + rand.Float64()*0.5
 		fontSize := float64(opts.height) / fontScale * opts.FontScale
 		ctx.SetFontSize(fontSize)
 		ctx.SetSrc(image.NewUniform(randomColorFromOptions(opts)))
 		x := fontSpacing*idx + fontOffset
-		y := opts.height/6 + rand.Intn(opts.height/3) + int(fontSize/2)
+		y := opts.height/10 + rand.Intn(opts.height/3) + int(fontSize/2)
 		pt := freetype.Pt(x, y)
 		if _, err := ctx.DrawString(string(char), pt); err != nil {
 			return err

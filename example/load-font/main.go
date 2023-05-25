@@ -1,33 +1,28 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/mzky/captcha"
-	"golang.org/x/image/font/gofont/goregular"
+	"golang.org/x/image/font/gofont/gobold"
 	"html/template"
-	"io"
+	"image/color"
 	"net/http"
 )
 
-func writeToBuffer(w io.Writer) []byte {
-	buf := new(bytes.Buffer)
-	io.Copy(w, buf)
-	return buf.Bytes()
-}
 func main() {
-	err := captcha.LoadFont(goregular.TTF)
-	if err != nil {
-		panic(err)
-	}
-
-	http.HandleFunc("/", indexHandle)
-	http.HandleFunc("/captcha", captchaHandle)
-	fmt.Println("Server start at port 8080")
-	err = http.ListenAndServe(":8080", nil)
-	if err != nil {
-		panic(err)
-	}
+	captchaImg()
+	//err := captcha.LoadFont(goregular.TTF)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//http.HandleFunc("/", indexHandle)
+	//http.HandleFunc("/captcha", captchaHandle)
+	//fmt.Println("Server start at port 8080")
+	//err = http.ListenAndServe(":8080", nil)
+	//if err != nil {
+	//	panic(err)
+	//}
 }
 
 func indexHandle(w http.ResponseWriter, _ *http.Request) {
@@ -49,4 +44,22 @@ func captchaHandle(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 	img.WriteImage(w)
+}
+
+func captchaImg() {
+	err := captcha.LoadFont(gobold.TTF)
+	if err != nil {
+		panic(err)
+	}
+	img, _ := captcha.New(100, 35, func(options *captcha.Options) {
+		options.CharPreset = "PQRWgvwMm"
+		options.FontDPI = 50
+		options.Noise = 0.6
+		options.BackgroundColor = color.Opaque
+	})
+
+	//img.WriteGIFFile("output.gif")
+	//img.WriteJPGFile("output.jpg")
+	img.WritePNGFile("output.png")
+
 }
