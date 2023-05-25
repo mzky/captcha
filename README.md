@@ -1,7 +1,8 @@
 本分支主要解决：
-1、字母超出边界问题
-2、公开img变量，以便保存成任何格式
-3、增加保存jpg、png、gif文件函数
+
+1.字母超出边界问题
+2.公开img变量，以便保存成任何格式
+3.增加保存jpg、png、gif文件函数
 
 
 > Package captcha provides an easy to use, unopinionated API for captcha generation.
