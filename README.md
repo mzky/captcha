@@ -14,7 +14,7 @@ I want a simple and framework-independent way to generate captcha. It also shoul
 
 ## install
 ```
-go get github.com/steambap/captcha
+go get github.com/mzky/captcha
 ```
 
 ## usage
